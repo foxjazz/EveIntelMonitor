@@ -1,0 +1,34 @@
+{
+  "systems": [
+    {
+      "system": "31x-re",
+      "connections": [
+        {
+          "rel_system": "y5c-yd",
+          "jump_number": 1
+        },
+        {
+          "rel_system": "5-6qwz",
+          "jump_number": 1
+        },
+        {
+          "rel_system": "q-02ul",
+          "jump_number": 1
+        }
+      ]
+    },
+    {
+      "system": "SystemB",
+      "connections": [
+        {
+          "rel_system": "SystemA",
+          "jump_number": 1
+        },
+        {
+          "rel_system": "SystemD",
+          "jump_number": 3
+        }
+      ]
+    }
+  ]
+}
