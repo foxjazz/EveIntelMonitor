@@ -1,5 +1,5 @@
 {
   "position": "e",
   "log_folder": "~/Documents/EVE.Logs/ChatLogs",
-  "soundJumpFolder": "~/Library/Application Support/EveIntelMonitor/"
+  "sound_folder": "~/Library/Application Support/EveIntelMonitor/"
 }

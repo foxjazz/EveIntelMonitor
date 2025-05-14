@@ -5,20 +5,26 @@ use std::path::PathBuf;
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
-    position: String,
-    log_folder: String,
-    sound_jump_folder: String,
+    pub position: String,
+    pub log_folder: String,
+    pub sound_folder: String,
 }
 
+pub fn expand_path(path: &str) -> PathBuf {
+    PathBuf::from(tilde(path).as_ref())
+}
 pub fn load_config(path: &str) -> Config {
     let raw = fs::read_to_string(path).expect("Failed to read config.json");
-    serde_json::from_str(&raw).expect("Invalid JSON format");
+    let mut config: Config = serde_json::from_str(&raw).expect("Invalid JSON format");
 
-    let config = load_config("src/config/config.json");
+    config.log_folder = expand_path(&config.log_folder)
+        .to_string_lossy()
+        .to_string();
+    config.sound_folder = expand_path(&config.sound_folder)
+        .to_string_lossy()
+        .to_string();
 
-    let log_folder = expand_path(&config.log_folder);
-    let sound_folder = expand_path(&config.sound_jump_folder);
-
-    println!("Log folder: {:?}", log_folder);
-    println!("Sound folder: {:?}", sound_folder);
+    println!("Log folder: {:?}", config.log_folder);
+    println!("Sound folder: {:?}", config.sound_folder);
+    config
 }
