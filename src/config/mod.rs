@@ -12,4 +12,5 @@ pub struct Config {
     pub position: String,
     pub log_folder: String,
     pub sound_jump_folder: String,
+    pub monitor_files: Vec<String>,
 }

@@ -18,17 +18,31 @@
       ]
     },
     {
-      "system": "SystemB",
+      "system": "y5c-yd",
       "connections": [
         {
-          "rel_system": "SystemA",
+         "rel_system": "31x-re",
           "jump_number": 1
-        },
-        {
-          "rel_system": "SystemD",
-          "jump_number": 3
         }
       ]
+    },
+    {
+      "system": "5-6qwz",
+      "connections": [
+        {
+          "rel_system": "31x-re",
+          "jump_number": 1
+        }
+      ]
+    },
+    {
+      "system": "q-02ul",
+      "connections": [
+        {
+          "rel_system": "31x-re",
+          "jump_number": 1
+        }
+      ] 
     }
   ]
 }

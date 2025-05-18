@@ -1,5 +1,8 @@
 {
-  "position": "e",
-  "log_folder": "~/Documents/EVE.Logs/ChatLogs",
-  "sound_folder": "~/Library/Application Support/EveIntelMonitor/"
+  "position": "31x-re",
+  "log_folder": "/Users/joedickinson/Documents/EVE/Logs/ChatLogs",
+  "sound_folder": "/Users/joedickinson/Library/Application Support/EveIntelMonitor/",
+  "monitor_files": [
+    "west.imperium"
+  ]
 }
