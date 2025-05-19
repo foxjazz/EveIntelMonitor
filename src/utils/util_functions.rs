@@ -8,6 +8,8 @@ use crossterm::{
     style::{PrintStyledContent, Stylize},
 };
 use std::io::{self, Write, stdout};
+use crossterm::event::KeyEvent;
+
 pub fn path_format(path: &str) -> String {
     if path.ends_with('/') {
         path.to_string()
@@ -37,7 +39,7 @@ fn filter_list<'a>(items: &'a [String], query: &str) -> Vec<&'a String> {
         .collect()
 }
 
-pub fn run_filter(items: &[String], x: u16, y: u16) -> Result<(), io::Error> {
+pub fn run_filter(title: &str,items: &[String]) -> Result<(), io::Error> {
     let mut stdout = stdout();
     terminal::enable_raw_mode()?;
     execute!(stdout, terminal::EnterAlternateScreen, cursor::Show)?;
@@ -46,15 +48,14 @@ pub fn run_filter(items: &[String], x: u16, y: u16) -> Result<(), io::Error> {
 
     loop {
         // Clear the screen each iteration
+        execute!(stdout, MoveTo(0, 0))?;
         execute!(stdout, Clear(ClearType::All))?;
-
+        write!(stdout, "\r{}\r\n", title)?;
         // Draw the prompt at a fixed position
-        execute!(stdout, MoveTo(x, y))?;
         write!(stdout, "Search: {}", input)?;
         stdout.flush()?;
 
-        // Move the cursor to the end of input for blinking
-        execute!(stdout, MoveTo(x + 8 + input.len() as u16, y))?;
+        let (x,y) = cursor::position().unwrap();
 
         // Display the filtered results below the prompt
         let filtered = filter_list(items, &input);
@@ -63,25 +64,24 @@ pub fn run_filter(items: &[String], x: u16, y: u16) -> Result<(), io::Error> {
             writeln!(stdout, "{}", item)?;
         }
 
+        execute!(stdout, MoveTo(x  as u16, y))?;
         stdout.flush()?;
 
         // Handle input
-        if event::poll(std::time::Duration::from_millis(200))? {
-            if let Event::Key(key_event) = event::read()? {
-                match key_event.code {
-                    KeyCode::Char(c) => input.push(c),
-                    KeyCode::Backspace => {
-                        input.pop();
-                    }
-                    KeyCode::Enter => break,
-                    KeyCode::Esc => {
-                        input.clear();
-                        break;
-                    }
-                    _ => {}
-                }
+        let code = get_key()?;
+        match code {
+            KeyCode::Char(c) => input.push(c),
+            KeyCode::Backspace => {
+                input.pop();
             }
+            KeyCode::Enter => break,
+            KeyCode::Esc => {
+                input.clear();
+                break;
+            }
+            _ => {}
         }
+
     }
 
     // Cleanup
@@ -93,4 +93,13 @@ pub fn run_filter(items: &[String], x: u16, y: u16) -> Result<(), io::Error> {
     )?;
     terminal::disable_raw_mode()?;
     Ok(())
+}
+pub fn get_key() -> io::Result<KeyCode> {
+    loop {
+        if event::poll(std::time::Duration::from_millis(500))? {
+            if let Event::Key(KeyEvent { code, .. }) = event::read()? {
+                return Ok(code);
+            }
+        }
+    }
 }

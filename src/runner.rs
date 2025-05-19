@@ -12,6 +12,7 @@ use std::io::{Write, stdout};
 use std::{thread, time::Duration};
 use crate::manage_chats::manage_chats;
 use crate::db::SystemsDb;
+use crate::utils::util_functions::get_key;
 
 #[derive(Debug)]
 enum Mode {
@@ -81,23 +82,21 @@ pub fn start() -> std::io::Result<()> {
 
 
         // Poll input
-        if event::poll(Duration::from_millis(200))? {
-            if let Event::Key(key_event) = event::read()? {
-            match key_event.code {
-                KeyCode::Char('q') => break,
-                KeyCode::Char('a') => {
-                    state.mode = Mode::AddSystem; 
-                    db.manage_systems();},
-                KeyCode::Char('c') => state.mode = Mode::Config,
-                KeyCode::Char('l') => state.mode = Mode::Listening,
-                KeyCode::Char('m') => {
+        let code = get_key()?;
+        match code {
+            KeyCode::Char('q') => break,
+            KeyCode::Char('a') => {
+                state.mode = Mode::AddSystem;
+                db.manage_systems();},
+            KeyCode::Char('c') => state.mode = Mode::Config,
+            KeyCode::Char('l') => state.mode = Mode::Listening,
+            KeyCode::Char('m') => {
                 state.mode = Mode::LogsMonitored;
                 manage_chats(); // Call the manage_chats function
-                },
-                _ => {}
-            }
-            }
+            },
+            _ => {} 
         }
+       
     }
 
     terminal::disable_raw_mode()?;

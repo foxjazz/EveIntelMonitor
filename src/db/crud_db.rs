@@ -62,8 +62,7 @@ impl SystemsDb {
             
             let items: Vec<String> = self.systems.iter().map(|x| x.system.clone()).collect();
             stdout().flush().unwrap();
-            let (x,y) = cursor::position().unwrap();
-            let list = run_filter(&items, x,y);
+            let list = run_filter("Select system to modify",&items);
              
         }
     }
